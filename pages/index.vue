@@ -1,29 +1,27 @@
 <script setup lang="ts">
-const { $api } = useNuxtApp();
+const { $api } = useNuxtApp()
 
-const {
-    data: people,
-    pending,
-    error
-  } = await $api.people.getAllPeople();
+const [
+  { data: house1, pending: pendingHouse1, error },
+  { data: house2, pending: pendingHouse2 },
+] = await Promise.all([
+  $api.house.getHouseById(5072),
+  $api.house.getHouseById(3803),
+])
+
+const isLoading = computed(() => pendingHouse1.value && pendingHouse2.value)
 </script>
 
 <template>
-  <h1>Characters list :</h1>
-  <div
-    v-if="pending"
-  >
+  <h1>House list :</h1>
+  <div v-if="isLoading">
     <span class="loader">Loader ...</span>
   </div>
   <div v-else-if="error">
-    {{  error }}
+    {{ error }}
   </div>
-  <div
-    v-else
-    class="product-wrapper"
-  >
-  <div v-for="(item, i) in people" :key="i">
-    <nuxt-link :to="{ name: 'people-slug', params: { slug: item.name } }">{{ item.name }}</nuxt-link>
-  </div>
+  <div v-else>
+    <pre>{{ house1 }}</pre>
+    <pre>{{ house2 }}</pre>
   </div>
 </template>

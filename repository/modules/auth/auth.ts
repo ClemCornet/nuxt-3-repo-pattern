@@ -5,7 +5,7 @@ import FetchFactory from '../../factory'
 import type { House } from '../house/interfaces/House'
 import type { ApiResponse } from '~/repository/types'
 
-class HouseModule extends FetchFactory<ApiResponse<House>> {
+class AuthModule extends FetchFactory<ApiResponse<unknown>> {
   constructor(
     private nuxtApp: NuxtApp,
     private _fetch: $Fetch,
@@ -49,4 +49,4 @@ class HouseModule extends FetchFactory<ApiResponse<House>> {
   }
 }
 
-export default HouseModule
+export default AuthModule
