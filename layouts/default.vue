@@ -8,7 +8,7 @@
         variant="solid"
         :trailing="false"
       >
-        Login
+        <nuxt-link :to="{ name: 'login' }">Login</nuxt-link>
       </UButton>
     </div>
   </UCard>

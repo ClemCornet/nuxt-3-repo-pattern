@@ -12,6 +12,9 @@ class FetchFactory<T> {
     return await this.$fetch<T>(url, {
       method,
       body: data,
+      onResponse: ({ response }) => {
+        console.log('response', response.headers)
+      },
       ...fetchOptions,
     })
   }

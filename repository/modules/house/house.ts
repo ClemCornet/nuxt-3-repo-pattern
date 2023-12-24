@@ -24,9 +24,9 @@ class HouseModule extends FetchFactory<ApiResponse<House>> {
             'Accept-Language': 'en-US',
           },
           params: {
-            'fields[house]':
-              'name,bathrooms,bedrooms,description,iconicCollection',
-            // include: 'destination',
+            // 'fields[house]':
+            //   'name,bathrooms,bedrooms,description,iconicCollection',
+            include: 'destination',
           },
         }
 

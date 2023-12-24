@@ -1,52 +1,39 @@
-import type { $Fetch, FetchOptions } from 'ofetch'
-import type { AsyncDataOptions, NuxtApp } from '#app'
+// import type SigninModule from './signin'
+// import type SignupModule from './signup'
 
-import FetchFactory from '../../factory'
-import type { House } from '../house/interfaces/House'
-import type { ApiResponse } from '~/repository/types'
+// interface AuthModuleContract {
+//   signInModule: SigninModule
+//   signUpModule: SignupModule
+// }
+// class AuthModule implements AuthModuleContract {
+//   private signinModule: SigninModule
+//   private signupModule: SignupModule
 
-class AuthModule extends FetchFactory<ApiResponse<unknown>> {
-  constructor(
-    private nuxtApp: NuxtApp,
-    private _fetch: $Fetch,
-  ) {
-    super(_fetch)
-  }
+//   constructor() {
+//     this.signinModule = new SigninModule()
+//     this.signupModule = new SignupModule()
+//   }
 
-  private RESOURCE = 'v3/houses/'
+//   // Implémentation des méthodes du contrat
+//   // signIn() {
+//   //   this.signInModule.signin()
+//   // }
 
-  getHouseById(houseId: number) {
-    return useLazyAsyncData(
-      'getHouseById',
-      () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-          params: {
-            'fields[house]':
-              'name,bathrooms,bedrooms,description,iconicCollection',
-            // include: 'destination',
-          },
-        }
+//   // signInWithToken() {
+//   //   this.signInModule.signinWithToken()
+//   // }
 
-        return this.call(
-          'GET',
-          `${this.RESOURCE}${houseId}`,
-          undefined, // body
-          fetchOptions,
-        )
-      },
-      {
-        // getCachedData: (key) => {
-        //   return this.nuxtApp.payload.data[key] || this.nuxtApp.static.data[key]
-        // },
-        transform: (response: ApiResponse<House>) => {
-          return response.data.attributes
-        },
-      },
-    )
-  }
-}
+//   // auth() {
+//   //   this.signUpModule.auth()
+//   // }
 
-export default AuthModule
+//   // signupWithToken() {
+//   //   this.signUpModule.signupWithToken()
+//   // }
+
+//   // finishSignup() {
+//   //   this.signUpModule.finishSignup()
+//   // }
+// }
+
+// export default AuthModule
