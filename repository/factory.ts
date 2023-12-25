@@ -1,4 +1,4 @@
-import type { $Fetch, FetchOptions } from 'ofetch'
+import type { $Fetch, FetchOptions, FetchResponse } from 'ofetch'
 
 class FetchFactory<T> {
   constructor(private $fetch: $Fetch) {}
@@ -12,8 +12,10 @@ class FetchFactory<T> {
     return await this.$fetch<T>(url, {
       method,
       body: data,
-      onResponse: ({ response }) => {
-        console.log('response', response.headers)
+      onResponseError({ response }) {
+        throw new Error('Connecting to database failed.', {
+          cause: response._data.errors,
+        })
       },
       ...fetchOptions,
     })

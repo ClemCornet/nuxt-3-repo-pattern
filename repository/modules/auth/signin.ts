@@ -43,6 +43,8 @@ class SigninModule extends FetchFactory<ApiResponse<unknown>> {
           console.log('response signin', response)
           return response
         },
+        immediate: false,
+        server: false,
       },
     )
   }

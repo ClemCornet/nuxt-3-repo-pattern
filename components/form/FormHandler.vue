@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  request: () => void
+  mutation: () => unknown
 }>()
 </script>
 
@@ -10,5 +10,7 @@ const props = defineProps<{
     :pending="pending"
     :error="error"
     :execute="props.request"
-  ></slot>
+  />
+
+  <slot name="submit" @click="props.mutation" />
 </template>

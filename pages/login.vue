@@ -1,12 +1,4 @@
-<script setup lang="ts">
-const { $api } = useNuxtApp()
-
-const login = () => {
-  const { data, pending, error } = $api.auth.signinModule.signin()
-
-  return data
-}
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <nuxt-link :to="{ name: 'index' }">Back</nuxt-link>

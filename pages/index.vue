@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { $api } = useNuxtApp()
 
-const { data: house, pending, error } = $api.house.getHouseById(6995)
+const { data: house, pending, error } = await $api.house.getHouseById(6995)
 </script>
 
 <template>
