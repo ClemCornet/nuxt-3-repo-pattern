@@ -6,31 +6,38 @@ const { $api } = useNuxtApp()
 const state = reactive({
   email: '',
 })
+let request = reactive({
+  data: '',
+  error: '',
+  status: '',
+})
 const validate = (state: any): FormError[] => {
   const errors = []
   if (!state.email) errors.push({ path: 'email', message: 'Required' })
   return errors
 }
 
-const { data, pending, error, execute, status } =
-  await $api.auth.signinModule.signin()
+const onSubmit = async (email: string) => {
+  const { data, error, status } = await $api.auth.signinModule.signin({
+    user: { email },
+  })
+  request = { ...toRefs({ data, error, status }) }
+}
 </script>
 
 <template>
-  <UForm
-    :validate="validate"
-    :state="state"
-    class="space-y-4"
-    @submit="execute"
-  >
+  <UForm :validate="validate" :state="state" class="space-y-4">
     <UFormGroup class="mb-8" label="Email" name="email">
       <UInput v-model="state.email" />
     </UFormGroup>
     <div class="flex justify-end">
-      <UButton type="submit" :loading="status === 'pending'"> Submit </UButton>
+      <UButton
+        :loading="request.status === 'pending'"
+        @click="onSubmit(state.email)"
+      >
+        Submit
+      </UButton>
+      <pre>{{ request.status }}</pre>
     </div>
   </UForm>
-  <pre>data: {{ data }}</pre>
-  <pre v-if="error">errors: {{ error.cause[0].user }}</pre>
-  <div>{{ pending }}</div>
 </template>

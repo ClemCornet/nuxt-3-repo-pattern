@@ -1,14 +1,10 @@
-import type { $Fetch, FetchOptions } from 'ofetch'
-import type { NuxtApp } from '#app'
+import type { $Fetch } from 'ofetch'
 
 import FetchFactory from '../../factory'
 import type { ApiResponse } from '~/repository/types'
 
 class SigninModule extends FetchFactory<ApiResponse<unknown>> {
-  constructor(
-    private nuxtApp: NuxtApp,
-    private _fetch: $Fetch,
-  ) {
+  constructor(private _fetch: $Fetch) {
     super(_fetch)
   }
 
@@ -17,33 +13,15 @@ class SigninModule extends FetchFactory<ApiResponse<unknown>> {
     signinWithToken: 'v3/user/auth/sign_in_with_token',
   }
 
-  signin() {
+  signin(params: { user: { email: string } }) {
+    console.log('params', params)
     return useLazyAsyncData(
       'signin',
       () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-        }
-
-        return this.call(
-          'POST',
-          this.RESOURCES.signin,
-          {
-            user: {
-              email: 'cornet.clement@gmail.com',
-            },
-          },
-          fetchOptions,
-        )
+        return this.call('POST', this.RESOURCES.signin, { ...params })
       },
       {
-        transform: (response: ApiResponse<unknown>) => {
-          console.log('response signin', response)
-          return response
-        },
-        immediate: false,
+        immediate: true,
         server: false,
       },
     )
@@ -53,24 +31,11 @@ class SigninModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'signin_with_token',
       () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-        }
-
-        return this.call(
-          'POST',
-          this.RESOURCES.signinWithToken,
-          undefined,
-          fetchOptions,
-        )
+        return this.call('POST', this.RESOURCES.signinWithToken, undefined)
       },
       {
-        transform: (response: ApiResponse<unknown>) => {
-          console.log('response signin', response)
-          return response
-        },
+        immediate: false,
+        server: false,
       },
     )
   }

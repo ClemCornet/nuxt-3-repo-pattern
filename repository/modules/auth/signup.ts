@@ -1,14 +1,10 @@
-import type { $Fetch, FetchOptions } from 'ofetch'
-import type { NuxtApp } from '#app'
+import type { $Fetch } from 'ofetch'
 
 import FetchFactory from '../../factory'
 import type { ApiResponse } from '~/repository/types'
 
 class SignupModule extends FetchFactory<ApiResponse<unknown>> {
-  constructor(
-    private nuxtApp: NuxtApp,
-    private _fetch: $Fetch,
-  ) {
+  constructor(private _fetch: $Fetch) {
     super(_fetch)
   }
 
@@ -22,18 +18,11 @@ class SignupModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'auth',
       () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-        }
-
-        return this.call('POST', this.RESOURCES.auth, undefined, fetchOptions)
+        return this.call('POST', this.RESOURCES.auth, undefined)
       },
       {
-        transform: (response: ApiResponse<unknown>) => {
-          return response
-        },
+        immediate: false,
+        server: false,
       },
     )
   }
@@ -42,23 +31,11 @@ class SignupModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'signup_with_token',
       () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-        }
-
-        return this.call(
-          'POST',
-          this.RESOURCES.signupWithToken,
-          undefined,
-          fetchOptions,
-        )
+        return this.call('POST', this.RESOURCES.signupWithToken, undefined)
       },
       {
-        transform: (response: ApiResponse<unknown>) => {
-          return response
-        },
+        immediate: false,
+        server: false,
       },
     )
   }
@@ -67,23 +44,11 @@ class SignupModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'finish_sign_up',
       () => {
-        const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
-        }
-
-        return this.call(
-          'POST',
-          this.RESOURCES.signupWithToken,
-          undefined,
-          fetchOptions,
-        )
+        return this.call('POST', this.RESOURCES.signupWithToken, undefined)
       },
       {
-        transform: (response: ApiResponse<unknown>) => {
-          return response
-        },
+        immediate: false,
+        server: false,
       },
     )
   }

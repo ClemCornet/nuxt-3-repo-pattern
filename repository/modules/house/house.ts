@@ -1,5 +1,5 @@
 import type { $Fetch, FetchOptions } from 'ofetch'
-import type { AsyncDataOptions, NuxtApp } from '#app'
+import type { NuxtApp } from '#app'
 
 import FetchFactory from '../../factory'
 import type { House } from '../house/interfaces/House'
@@ -24,8 +24,8 @@ class HouseModule extends FetchFactory<ApiResponse<House>> {
             'Accept-Language': 'en-US',
           },
           params: {
-            // 'fields[house]':
-            //   'name,bathrooms,bedrooms,description,iconicCollection',
+            'fields[house]':
+              'name,bathrooms,bedrooms,description,iconicCollection',
             include: 'destination',
           },
         }
@@ -33,14 +33,14 @@ class HouseModule extends FetchFactory<ApiResponse<House>> {
         return this.call(
           'GET',
           `${this.RESOURCE}${houseId}`,
-          undefined, // body
+          undefined,
           fetchOptions,
         )
       },
       {
-        // getCachedData: (key) => {
-        //   return this.nuxtApp.payload.data[key] || this.nuxtApp.static.data[key]
-        // },
+        getCachedData: (key) => {
+          return this.nuxtApp.payload.data[key] || this.nuxtApp.static.data[key]
+        },
         transform: (response: ApiResponse<House>) => {
           return response.data.attributes
         },
