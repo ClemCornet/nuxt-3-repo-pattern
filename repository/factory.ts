@@ -1,9 +1,9 @@
-import type { $Fetch, FetchOptions, FetchResponse } from 'ofetch'
+import type { $Fetch, FetchOptions } from 'ofetch'
 
-class FetchFactory<T> {
+class FetchFactory {
   constructor(private $fetch: $Fetch) {}
 
-  async call(
+  async call<T>(
     method: string,
     url: string,
     data?: object,
@@ -13,7 +13,7 @@ class FetchFactory<T> {
       method,
       body: data,
       onResponseError({ response }) {
-        throw new Error('Connecting to database failed.', {
+        throw new Error(`Failed to fetch ${url}`, {
           cause: response._data.errors,
         })
       },
