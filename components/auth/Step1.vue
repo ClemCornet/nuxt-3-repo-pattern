@@ -3,10 +3,15 @@ import type { FormError } from '#ui/types'
 
 const { $api } = useNuxtApp()
 
+const emits = defineEmits<{
+  (e: 'onSuccess', step: 'step2'): void
+}>()
+
+// form logic
 const state = reactive({
   email: '',
 })
-const validate = (state: any): FormError[] => {
+const validate = (state: Record<string, unknown>): FormError[] => {
   const errors = []
   if (!state.email) errors.push({ path: 'email', message: 'Required' })
   return errors
@@ -23,18 +28,26 @@ const mutation = async () => {
   }
 }
 const onSubmit = () => ({
-  onSuccess: (response: unknown) => {
-    console.log('response cb', response)
+  onSuccess: (response: Ref<{ success: true } | null>) => {
+    if (response.value?.success) {
+      console.log('success', response.value)
+      emits('onSuccess', 'step2')
+    }
   },
-  onError: (err: unknown) => {
+  onError: (err: Ref<Error | null>) => {
     console.log('err cb', err)
   },
 })
 </script>
 
 <template>
-  <FormHandler :mutation="mutation" :on-submit="onSubmit">
-    <template #default="{ data, error, status }">
+  <FormHandler
+    :mutation="mutation"
+    :on-submit="onSubmit"
+    :state="state"
+    :validate="validate"
+  >
+    <template #default="{ data, status }">
       <UFormGroup class="mb-8" label="Email" name="email">
         <UInput v-model="state.email" />
       </UFormGroup>
@@ -44,8 +57,6 @@ const onSubmit = () => ({
         </UButton>
       </div>
       <pre>{{ data }}</pre>
-      <pre>{{ error }}</pre>
-      <pre>{{ status }}</pre>
     </template>
   </FormHandler>
 </template>

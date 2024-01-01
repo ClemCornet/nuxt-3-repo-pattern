@@ -23,14 +23,16 @@ class SigninModule extends FetchFactory {
     )
   }
 
-  signinWithToken() {
+  signinWithToken(params: { email: string; login_token: string }) {
     return useLazyAsyncData(
       'signin_with_token',
       () => {
-        return this.call('POST', 'v3/user/auth/sign_in_with_token', undefined)
+        return this.call('POST', 'v3/user/auth/sign_in_with_token', {
+          user: { ...params },
+        })
       },
       {
-        immediate: false,
+        immediate: true,
         server: false,
       },
     )
