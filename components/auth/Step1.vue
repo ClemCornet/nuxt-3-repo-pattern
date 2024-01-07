@@ -2,6 +2,7 @@
 import type { FormError } from '#ui/types'
 
 const { $api } = useNuxtApp()
+const { cookies } = useSessionCookies()
 
 const emits = defineEmits<{
   (e: 'onSuccess', step: 'step2'): void
@@ -17,7 +18,7 @@ const validate = (state: Record<string, unknown>): FormError[] => {
   return errors
 }
 const mutation = async () => {
-  const { data, error, status } = await $api.auth.signinModule.signin({
+  const { data, error, status, pending } = await $api.auth.signinModule.signin({
     user: { email: state.email },
   })
 
@@ -25,12 +26,12 @@ const mutation = async () => {
     data,
     error,
     status,
+    pending,
   }
 }
 const onSubmit = () => ({
   onSuccess: (response: Ref<{ success: true } | null>) => {
     if (response.value?.success) {
-      console.log('success', response.value)
       emits('onSuccess', 'step2')
     }
   },
@@ -47,16 +48,16 @@ const onSubmit = () => ({
     :state="state"
     :validate="validate"
   >
-    <template #default="{ data, status }">
+    <template #default="{ pending }">
       <UFormGroup class="mb-8" label="Email" name="email">
         <UInput v-model="state.email" />
       </UFormGroup>
       <div class="flex justify-end">
-        <UButton :loading="status === 'pending'" type="submit">
-          Submit
-        </UButton>
+        <UButton :loading="pending" type="submit"> Submit </UButton>
       </div>
-      <pre>{{ data }}</pre>
     </template>
   </FormHandler>
+  <div>
+    <pre>{{ cookies }}</pre>
+  </div>
 </template>

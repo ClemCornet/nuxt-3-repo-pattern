@@ -2,6 +2,7 @@
 import type { FormError } from '#ui/types'
 
 const { $api } = useNuxtApp()
+const cookieSession = useAuth()
 
 // const emits = defineEmits<{
 //   (e: 'onSuccess', step: 'login'): void
@@ -56,4 +57,5 @@ const onSubmit = () => ({
       </div>
     </template>
   </FormHandler>
+  <pre>{{ cookieSession }}</pre>
 </template>

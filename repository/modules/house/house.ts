@@ -1,28 +1,21 @@
-import type { $Fetch, FetchOptions } from 'ofetch'
+import type { FetchOptions } from 'ofetch'
 import type { NuxtApp } from '#app'
 
 import FetchFactory from '../../factory'
 import type { House } from '../house/interfaces/House'
 import type { ApiResponse } from '~/repository/types'
 
-class HouseModule extends FetchFactory<ApiResponse<House>> {
+class HouseModule {
   constructor(
+    private $fetch: FetchFactory,
     private nuxtApp: NuxtApp,
-    private _fetch: $Fetch,
-  ) {
-    super(_fetch)
-  }
-
-  private RESOURCE = 'v3/houses/'
+  ) {}
 
   getHouseById(houseId: number) {
     return useLazyAsyncData(
       'getHouseById',
       () => {
         const fetchOptions: FetchOptions<'json'> = {
-          headers: {
-            'Accept-Language': 'en-US',
-          },
           params: {
             'fields[house]':
               'name,bathrooms,bedrooms,description,iconicCollection',
@@ -30,16 +23,19 @@ class HouseModule extends FetchFactory<ApiResponse<House>> {
           },
         }
 
-        return this.call(
+        return this.$fetch.call<ApiResponse<House>>(
           'GET',
-          `${this.RESOURCE}${houseId}`,
+          `v3/houses/${houseId}`,
           undefined,
           fetchOptions,
         )
       },
       {
         getCachedData: (key) => {
-          return this.nuxtApp.payload.data[key] || this.nuxtApp.static.data[key]
+          return (
+            (this.nuxtApp.payload.data[key] as unknown as ApiResponse<House>) ||
+            (this.nuxtApp.static.data[key] as unknown as ApiResponse<House>)
+          )
         },
         transform: (response: ApiResponse<House>) => {
           return response.data.attributes

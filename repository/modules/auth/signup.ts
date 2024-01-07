@@ -3,22 +3,14 @@ import type { $Fetch } from 'ofetch'
 import FetchFactory from '../../factory'
 import type { ApiResponse } from '~/repository/types'
 
-class SignupModule extends FetchFactory<ApiResponse<unknown>> {
-  constructor(private _fetch: $Fetch) {
-    super(_fetch)
-  }
-
-  private RESOURCES = {
-    auth: 'v3/user/auth',
-    signupWithToken: 'v3/user/auth/sign_up_with_token',
-    finishSignup: 'v3/user/auth/finish_signup',
-  }
+class SignupModule {
+  constructor(private $fetch: FetchFactory) {}
 
   auth() {
     return useLazyAsyncData(
       'auth',
       () => {
-        return this.call('POST', this.RESOURCES.auth, undefined)
+        return this.$fetch.call('POST', 'v3/user/auth', undefined)
       },
       {
         immediate: false,
@@ -31,7 +23,11 @@ class SignupModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'signup_with_token',
       () => {
-        return this.call('POST', this.RESOURCES.signupWithToken, undefined)
+        return this.$fetch.call(
+          'POST',
+          'v3/user/auth/sign_up_with_token',
+          undefined,
+        )
       },
       {
         immediate: false,
@@ -44,7 +40,11 @@ class SignupModule extends FetchFactory<ApiResponse<unknown>> {
     return useLazyAsyncData(
       'finish_sign_up',
       () => {
-        return this.call('POST', this.RESOURCES.signupWithToken, undefined)
+        return this.$fetch.call(
+          'POST',
+          'v3/user/auth/sign_up_with_token',
+          undefined,
+        )
       },
       {
         immediate: false,

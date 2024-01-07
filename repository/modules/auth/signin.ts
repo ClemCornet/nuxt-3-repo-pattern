@@ -1,24 +1,22 @@
-import type { $Fetch } from 'ofetch'
-
 import FetchFactory from '../../factory'
-// import type { ApiResponse } from '~/repository/types'
-
-class SigninModule extends FetchFactory {
-  constructor(private _fetch: $Fetch) {
-    super(_fetch)
-  }
+class SigninModule {
+  constructor(private $fetch: FetchFactory) {}
 
   signin(params: { user: { email: string } }) {
     return useLazyAsyncData(
       'signin',
       () => {
-        return this.call<{ success: true }>('POST', 'v3/user/auth/sign_in', {
-          ...params,
-        })
+        return this.$fetch.call<{ success: true }>(
+          'POST',
+          'v3/user/auth/sign_in',
+          {
+            ...params,
+          },
+        )
       },
       {
         immediate: true,
-        server: false,
+        server: true,
       },
     )
   }
@@ -27,13 +25,13 @@ class SigninModule extends FetchFactory {
     return useLazyAsyncData(
       'signin_with_token',
       () => {
-        return this.call('POST', 'v3/user/auth/sign_in_with_token', {
+        return this.$fetch.call('POST', 'v3/user/auth/sign_in_with_token', {
           user: { ...params },
         })
       },
       {
         immediate: true,
-        server: false,
+        server: true,
       },
     )
   }

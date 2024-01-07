@@ -28,14 +28,16 @@ const props = defineProps<{
 const request = reactive({
   data: null,
   error: null,
+  pending: false,
   status: '',
 }) as Response<DataT>
 
 const onSubmit = () => {
-  props.mutation().then(({ data, error, status }) => {
+  props.mutation().then(({ data, error, status, pending }) => {
+    request.pending = pending as unknown as boolean
+    request.status = status as unknown as AsyncDataRequestStatus
     request.data = data as unknown as DataT
     request.error = error as unknown as Error | null
-    request.status = status as unknown as AsyncDataRequestStatus
 
     const { onSuccess, onError } = props.onSubmit()
     onSuccess(data)
@@ -55,6 +57,7 @@ const onSubmit = () => {
       :data="request.data"
       :error="request.error"
       :status="request.status"
+      :pending="request.pending"
     />
   </UForm>
 </template>
