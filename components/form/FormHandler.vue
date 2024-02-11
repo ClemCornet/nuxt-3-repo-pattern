@@ -6,13 +6,15 @@ import type { FormError } from '#ui/types'
 interface ResponseRef<T> {
   data: Ref<T>
   error: Ref<Error | null>
-  status: Ref<AsyncDataRequestStatus | ''>
+  status?: Ref<AsyncDataRequestStatus | ''>
+  pending?: Ref<boolean>
 }
 
 interface Response<T> {
   data: T
   error: Error | null
-  status: AsyncDataRequestStatus | ''
+  status?: AsyncDataRequestStatus | ''
+  pending?: boolean
 }
 
 const props = defineProps<{

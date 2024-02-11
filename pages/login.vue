@@ -10,9 +10,14 @@ const componentsStep = reactive({
   step3: shallowRef(AuthStep3),
 })
 
-const onSuccess = (step: Steps) => {
-  console.log('success', step)
-  currentStep.value = step
+const state = reactive({
+  email: '',
+  token: '',
+})
+
+const handleSuccess = (payload: { step: string; value: string }) => {
+  currentStep.value = payload.step
+  state.email = payload.value
 }
 </script>
 
@@ -22,9 +27,11 @@ const onSuccess = (step: Steps) => {
     class="flex flex-grow flex-col justify-center max-w-xl min-h-[500px]"
   >
     <h1 class="text-2xl semi-bold mb-12">Login</h1>
+    <!-- @vue-ignore -->
     <component
       :is="componentsStep[currentStep as Steps]"
-      @on-success="($event) => onSuccess($event as Steps)"
+      :state="state"
+      @on-success="($event) => handleSuccess($event)"
     />
   </UContainer>
 </template>

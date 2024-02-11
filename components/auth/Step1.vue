@@ -2,10 +2,9 @@
 import type { FormError } from '#ui/types'
 
 const { $api } = useNuxtApp()
-const { cookies } = useSessionCookies()
 
 const emits = defineEmits<{
-  (e: 'onSuccess', step: 'step2'): void
+  (e: 'onSuccess', payload: Record<string, string>): void
 }>()
 
 // form logic
@@ -19,7 +18,7 @@ const validate = (state: Record<string, unknown>): FormError[] => {
 }
 const mutation = async () => {
   const { data, error, status, pending } = await $api.auth.signinModule.signin({
-    user: { email: state.email },
+    user: { email: state.email as string },
   })
 
   return {
@@ -32,7 +31,7 @@ const mutation = async () => {
 const onSubmit = () => ({
   onSuccess: (response: Ref<{ success: true } | null>) => {
     if (response.value?.success) {
-      emits('onSuccess', 'step2')
+      emits('onSuccess', { step: 'step2', value: state.email })
     }
   },
   onError: (err: Ref<Error | null>) => {
@@ -57,7 +56,5 @@ const onSubmit = () => ({
       </div>
     </template>
   </FormHandler>
-  <div>
-    <pre>{{ cookies }}</pre>
-  </div>
+  <div></div>
 </template>

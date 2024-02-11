@@ -31,13 +31,13 @@ class HouseModule {
         )
       },
       {
-        getCachedData: (key) => {
-          return (
-            (this.nuxtApp.payload.data[key] as unknown as ApiResponse<House>) ||
-            (this.nuxtApp.static.data[key] as unknown as ApiResponse<House>)
-          )
-        },
-        transform: (response: ApiResponse<House>) => {
+        // getCachedData: (key) => {
+        //   return (
+        //     (this.nuxtApp.payload.data[key] as unknown as ApiResponse<House>) ||
+        //     (this.nuxtApp.static.data[key] as unknown as ApiResponse<House>)
+        //   )
+        // },
+        transform: (response) => {
           return response.data.attributes
         },
       },

@@ -1,4 +1,6 @@
 import FetchFactory from '../../factory'
+import type { User } from '../user/interfaces/User'
+import type { ApiResponse } from '~/repository/types'
 class SigninModule {
   constructor(private $fetch: FetchFactory) {}
 
@@ -25,13 +27,22 @@ class SigninModule {
     return useLazyAsyncData(
       'signin_with_token',
       () => {
-        return this.$fetch.call('POST', 'v3/user/auth/sign_in_with_token', {
-          user: { ...params },
-        })
+        return this.$fetch.call<ApiResponse<User>>(
+          'POST',
+          'v3/user/auth/sign_in_with_token',
+          {
+            user: { ...params },
+          },
+        )
       },
       {
         immediate: true,
         server: true,
+        transform: (response) => {
+          return {
+            ...response.data.attributes,
+          }
+        },
       },
     )
   }

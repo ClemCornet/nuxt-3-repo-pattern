@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { $api } = useNuxtApp()
+const { houseRepository } = repository()
 
 const { data: house, pending, error } = await $api.house.getHouseById(6995)
 </script>

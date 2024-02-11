@@ -2,14 +2,14 @@
 import type { FormError } from '#ui/types'
 
 const { $api } = useNuxtApp()
-const cookieSession = useAuth()
-
-// const emits = defineEmits<{
-//   (e: 'onSuccess', step: 'login'): void
-// }>()
+const router = useRouter()
+const { setUser } = useAuth()
+const props = defineProps<{
+  state: Record<string, unknown>
+}>()
 
 // form logic
-const state = reactive({
+const localState = reactive({
   token: '',
 })
 const validate = (state: Record<string, unknown>): FormError[] => {
@@ -18,20 +18,30 @@ const validate = (state: Record<string, unknown>): FormError[] => {
   return errors
 }
 const mutation = async () => {
-  const { data, error, status } = await $api.auth.signinModule.signinWithToken({
-    email: 'cornet.clement@gmail.com',
-    login_token: state.token,
-  })
+  const { data, error, pending, status } =
+    await $api.auth.signinModule.signinWithToken({
+      email: props.state.email as string,
+      login_token: localState.token,
+    })
 
   return {
     data,
     error,
+    pending,
     status,
   }
 }
 const onSubmit = () => ({
-  onSuccess: (response: Ref<unknown>) => {
-    return response.value
+  onSuccess: (response) => {
+    if (response.value) {
+      setUser({
+        email: response.value.email,
+        firstname: response.value.firstName,
+        lastname: response.value.lastName,
+        isAdmin: response.value.isAdmin,
+      })
+      router.push({ name: 'account' })
+    }
   },
   onError: (err: Ref<Error | null>) => {
     console.log('err cb', err)
@@ -43,19 +53,16 @@ const onSubmit = () => ({
   <FormHandler
     :mutation="mutation"
     :on-submit="onSubmit"
-    :state="state"
+    :state="localState"
     :validate="validate"
   >
-    <template #default="{ status }">
-      <UFormGroup class="mb-8" label="Entrez votre code" name="token">
-        <UInput v-model="state.token" />
+    <template #default="{ pending }">
+      <UFormGroup class="mb-8" label="Enter your code" name="token">
+        <UInput v-model="localState.token" />
       </UFormGroup>
       <div class="flex justify-end">
-        <UButton :loading="status === 'pending'" type="submit">
-          Submit
-        </UButton>
+        <UButton :loading="pending" type="submit"> Submit </UButton>
       </div>
     </template>
   </FormHandler>
-  <pre>{{ cookieSession }}</pre>
 </template>
