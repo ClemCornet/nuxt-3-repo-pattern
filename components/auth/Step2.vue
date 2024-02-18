@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { FormError } from '#ui/types'
+import type { User } from '@/repository/auth/interfaces/User'
+import AuthRepository from '@/repository/auth/auth'
 
 const { $api } = useNuxtApp()
+const authRepository = new AuthRepository($api)
 const router = useRouter()
 const { setUser } = useAuth()
 const props = defineProps<{
@@ -17,12 +20,21 @@ const validate = (state: Record<string, unknown>): FormError[] => {
   if (!state.token) errors.push({ path: 'token', message: 'Required' })
   return errors
 }
+
 const mutation = async () => {
-  const { data, error, pending, status } =
-    await $api.auth.signinModule.signinWithToken({
-      email: props.state.email as string,
-      login_token: localState.token,
-    })
+  const { data, error, pending, status } = await useLazyAsyncData(
+    'signinWithToken',
+    () =>
+      authRepository.signinWithToken({
+        email: props.state.email as string,
+        login_token: localState.token,
+      }),
+    {
+      transform: (response) => {
+        return response.data.attributes
+      },
+    },
+  )
 
   return {
     data,
@@ -31,8 +43,9 @@ const mutation = async () => {
     status,
   }
 }
+
 const onSubmit = () => ({
-  onSuccess: (response) => {
+  onSuccess: (response: Ref<User | null>) => {
     if (response.value) {
       setUser({
         email: response.value.email,

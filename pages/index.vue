@@ -1,8 +1,22 @@
 <script setup lang="ts">
-const { $api } = useNuxtApp()
-const { houseRepository } = repository()
+import HouseRepository from '@/repository/house/house'
 
-const { data: house, pending, error } = await $api.house.getHouseById(6995)
+const { $api } = useNuxtApp()
+const houseRepository = new HouseRepository($api)
+
+const {
+  data: house,
+  error,
+  pending,
+} = await useLazyAsyncData(
+  'getHouseById',
+  () => houseRepository.getHouseById(3708),
+  {
+    transform: (response) => {
+      return response.data.attributes
+    },
+  },
+)
 </script>
 
 <template>

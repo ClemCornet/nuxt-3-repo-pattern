@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="DataT">
 import { defineProps, reactive } from 'vue'
-import type { AsyncDataRequestStatus } from 'nuxt/dist/app/composables/asyncData'
 import type { FormError } from '#ui/types'
 
+type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error'
 interface ResponseRef<T> {
   data: Ref<T>
   error: Ref<Error | null>
