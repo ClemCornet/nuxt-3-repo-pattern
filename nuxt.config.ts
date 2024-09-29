@@ -7,11 +7,13 @@ export default defineNuxtConfig({
     icons: ['heroicons'],
   },
   runtimeConfig: {
+    apiSecret: '',
     public: {
-      apiBaseUrl: process.env.API_BASE_URL,
+      apiBase: '',
     },
   },
-  typescript: {
-    typeCheck: false,
-  },
+  // typescript: {
+  //   typeCheck: true,
+  //   strict: true,
+  // },
 })

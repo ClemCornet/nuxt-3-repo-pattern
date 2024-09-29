@@ -49,6 +49,7 @@ const onSubmit = () => ({
 </script>
 
 <template>
+  <!-- @vue-ignore -->
   <FormHandler
     :mutation="mutation"
     :on-submit="onSubmit"

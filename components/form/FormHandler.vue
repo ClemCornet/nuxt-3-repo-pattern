@@ -1,5 +1,4 @@
 <script setup lang="ts" generic="DataT">
-import { defineProps, reactive } from 'vue'
 import type { FormError } from '#ui/types'
 
 type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error'
